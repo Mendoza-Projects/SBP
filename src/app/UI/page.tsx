@@ -4,18 +4,19 @@ import { useState, useEffect } from "react";
 import { useBeats } from "../Context/beatcontext";
 
 const UIPage = () => {
-  // Check if the context provides both youtubeUrls and updateYoutubeUrls
+  // Always call hooks at the top level
   const { youtubeUrls, updateYoutubeUrls } = useBeats();
-  
+
   // Ensure youtubeUrls and updateYoutubeUrls are available
   if (!youtubeUrls || !updateYoutubeUrls) {
     console.error("Error: youtubeUrls or updateYoutubeUrls not found in context.");
     return null; // Prevent component from rendering if context is missing
   }
 
+  // Now, define the local state (useState) here
   const [inputUrls, setInputUrls] = useState<string[]>(new Array(5).fill("")); // Track input fields locally
 
-  // Load existing YouTube URLs from localStorage on component mount
+  // UseEffect should also be declared before any conditional logic
   useEffect(() => {
     const storedUrls = localStorage.getItem("youtubeUrls");
     if (storedUrls) {
