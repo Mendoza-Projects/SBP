@@ -4,7 +4,15 @@ import { useState, useEffect } from "react";
 import { useBeats } from "../Context/beatcontext";
 
 const UIPage = () => {
-  const { youtubeUrls, updateYoutubeUrls } = useBeats(); // Make sure you get both the state and update function
+  // Check if the context provides both youtubeUrls and updateYoutubeUrls
+  const { youtubeUrls, updateYoutubeUrls } = useBeats();
+  
+  // Ensure youtubeUrls and updateYoutubeUrls are available
+  if (!youtubeUrls || !updateYoutubeUrls) {
+    console.error("Error: youtubeUrls or updateYoutubeUrls not found in context.");
+    return null; // Prevent component from rendering if context is missing
+  }
+
   const [inputUrls, setInputUrls] = useState<string[]>(new Array(5).fill("")); // Track input fields locally
 
   // Load existing YouTube URLs from localStorage on component mount
