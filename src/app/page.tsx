@@ -6,6 +6,19 @@ import { useBeats } from "./Context/beatcontext";
 const Home = () => {
   const { youtubeUrls } = useBeats(); // Get the global youtubeUrls from context
   const [playingVideo, setPlayingVideo] = useState<number | null>(null); // Track which video is playing
+  const [loadedUrls, setLoadedUrls] = useState<string[]>([]); // Local state for URLs
+
+  // Load YouTube URLs from localStorage on mount
+  useEffect(() => {
+    const storedUrls = localStorage.getItem("youtubeUrls");
+    if (storedUrls) {
+      const parsedUrls = JSON.parse(storedUrls);
+      setLoadedUrls(parsedUrls);
+      console.log("📥 Loaded YouTube URLs from localStorage:", parsedUrls);
+    } else {
+      setLoadedUrls(youtubeUrls); // Fallback to context if no local storage
+    }
+  }, [youtubeUrls]);
 
   // Handle clicking on a thumbnail to start playing the video
   const handleThumbnailClick = (index: number) => {
@@ -18,7 +31,7 @@ const Home = () => {
 
       {/* Beat cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4 mt-6">
-        {youtubeUrls.map((url, index) => {
+        {loadedUrls.map((url, index) => {
           if (!url) return null; // Skip if no URL is available
 
           const videoId = url.split("v=")[1]?.split("&")[0]; // Extract video ID
